@@ -1,0 +1,2197 @@
+<script>
+
+  var filesGlobal_file_raa_ci_1 = '';
+  var filesGlobal_file_raa_ci_2 = '';
+  var filesGlobal_file_raa_ci_3 = '';
+  var filesGlobal_file_raa_ci_4 = '';
+  var filesGlobal_file_raa_ci_5 = '';
+  
+  var filesGlobal_file_raa1 = '';
+  var filesGlobal_file_raa2 = '';
+  var filesGlobal_file_raa3 = '';
+  var filesGlobal_file_raa4 = '';
+  var filesGlobal_file_raa5 = '';
+  var filesGlobal_file_raa6 = '';
+
+  var filesGlobal_file_pi_no_obj = '';
+
+  var mainData_re_ID = '';
+
+
+  $(document).ready(function(){
+    $('select').formSelect();
+
+    $('.datepicker').datepicker({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 1, // Creates a dropdown of 15 years to control year
+    format: "dd-mm-yyyy",
+    setDefaultDate: true
+    }
+    );
+
+    $('#radioaddmoreYes').change(function(event) {
+        $('#' + 'drug_addmore').removeClass('none');
+    });
+
+    $('#radioaddmoreNo').change(function(event) {
+        $('#' + 'drug_addmore').addClass('none');
+    });
+
+
+    $('.modal').modal();
+
+      });
+
+function forgotPassword(){
+  console.log('forgotPassword clicked!')
+  forgotPasswordModal();
+}
+
+function forgotPasswordModal(){
+    document.getElementById("loaderTextLink_fp").style.display="none";
+    const elem = document.getElementById('modalForgotPassword');
+    const instance = M.Modal.init(elem, {dismissible: true});
+    instance.open();
+}
+
+function registerNewUser(){
+  console.log('registerNewUser clicked!')
+  registerNewUserModal();
+}
+
+function registerNewUserModal(){
+    document.getElementById("loaderTextLink_rnu").style.display="none";
+    const elem = document.getElementById('modalregisterNewUser');
+    const instance = M.Modal.init(elem, {dismissible: true});
+    instance.open();
+}
+
+function resendPassResetLink(){
+
+    // const elem = document.getElementById('modalForgotPassword');
+    // const instance = M.Modal.init(elem, {dismissible: true});
+    // instance.close();
+
+}
+
+function submitRegisterNewUser(){
+
+  if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("email_nu").value) == false) {
+  showElement('email_nu')
+} else if (/^[-a-zA-Z0-9_ ]{1,200}$/.test(document.getElementById("password_nu").value) == false) {
+  showElement('password_nu')
+} else if (/^[-a-zA-Z0-9_ ]{1,200}$/.test(document.getElementById("c_password_nu").value) == false) {
+  showElement('c_password_nu')
+} else if (document.getElementById("password_nu").value != document.getElementById("c_password_nu").value) {
+  showElement('c_password_nu')
+} else if (/^[0-9]*$/.test(document.getElementById("slmc_nu").value) == false) {
+  showElement('slmc_nu')
+
+} else if (!document.getElementById("initials_nu").value) {
+  showElement('initials_nu')
+} else if (!document.getElementById("last_name_nu").value) {
+  showElement('last_name_nu')
+} else if (!document.getElementById("full_name_nu").value) {
+  showElement('full_name_nu')
+} else if (!document.getElementById("sex_nu").value) {
+  showElement('sex_nu')
+} else if (!document.getElementById("mobile_nu").value) {
+  showElement('mobile_nu')
+} else if (!document.getElementById("address_nu").value) {
+  showElement('address_nu')
+
+  
+}else{
+
+  document.getElementById('progress_indeter_nu').style.display='block'
+  var newUser_data = {};
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Sendng data, please wait..";
+  // document.getElementById('progress_indeter').style.display='none'
+  openModalMessage();
+
+  newUser_data.email = document.getElementById("email_nu").value;
+  newUser_data.password = document.getElementById("password_nu").value;
+  newUser_data.slmc_nu = document.getElementById("slmc_nu").value;
+  newUser_data.activationKey = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+  newUser_data.initials_nu = document.getElementById("initials_nu").value;
+  newUser_data.last_name_nu = document.getElementById("last_name_nu").value;
+  newUser_data.full_name_nu = document.getElementById("full_name_nu").value;
+  newUser_data.sex_nu = document.getElementById("sex_nu").value;
+  newUser_data.mobile_nu = document.getElementById("mobile_nu").value;
+  newUser_data.address_nu = document.getElementById("address_nu").value;
+
+
+
+    google.script.run.withSuccessHandler((newUser_reg) => {
+                    console.log("newUser_reg :",newUser_reg);
+                    if(newUser_reg.status=="Success"){
+
+                        google.script.run.withSuccessHandler((url) => {
+                            var link = url+"?n="+newUser_reg.activationKey;
+                            var emailData = {};
+                            emailData.link = link;
+                            emailData.email = newUser_reg.email;
+                            console.log("url : ",link)
+                            google.script.run.withSuccessHandler((status) => {
+
+                              if (status=="Success"){
+                                var modalMessage = document.getElementById("topictext");
+                                modalMessage.innerHTML = "New User Activation Link with instructions has been sent to "+newUser_reg.email + ", Please check your emails";
+                                document.getElementById('progress_indeter').style.display='none'
+                                openModalMessage();
+                            }
+
+                              }).sendNewUserActivationEmail(emailData);
+
+                          }).getUrl();
+
+                      // google.script.run.withSuccessHandler((url) => {
+
+                      //     document.getElementById("loaderTextLink_msg").href = url;
+                      //     document.getElementById("loaderTextLink_msg").innerHTML = 'Click here to login';
+                      //   }).getUrl();
+
+                      //   google.script.run.withSuccessHandler((status) => {
+
+                      //     // document.getElementById("loaderTextLink_msg").href = url;
+                      //     // document.getElementById("loaderTextLink_msg").innerHTML = 'Click here to login';
+                      //   }).sendNewUserActivationEmail();
+
+                        
+                      // var modalMessage = document.getElementById("topictext");
+                      // modalMessage.innerHTML = "Registration Success...";
+                      // document.getElementById('progress_indeter').style.display='none'
+                      // openModalMessage();
+                    }else{
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Registration Failed......";
+                      document.getElementById('progress_indeter').style.display='none'
+                      openModalMessage();
+                    }
+
+                }).regNewUser(newUser_data);
+
+
+  } 
+}
+
+function loginClicked(){
+
+if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("email").value) == false) {
+  showElement('email')
+} else if (/^[-a-zA-Z0-9_ ]{1,200}$/.test(document.getElementById("password").value) == false) {
+  showElement('password')
+}else{
+
+  document.getElementById('progress_indeter').style.display='block'
+  var login_data = {};
+
+
+  login_data.email = document.getElementById("email").value;
+  login_data.password = document.getElementById("password").value;
+
+  google.script.run.withSuccessHandler((result) => {
+                    console.log(result);
+                    if(login_data.email==result.email && login_data.password==result.password && result.activation=='Activated'){
+
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Logging you in ...";
+                      document.getElementById('progress_indeter').style.display='none'
+                      openModalMessage();
+
+                      google.script.run.withSuccessHandler((encoded_data) => {
+                         window.open(encoded_data.url+"?a="+encoded_data.encoded,'_top')
+                         
+                         document.getElementById('loaderTextLink_msg').href = encoded_data.url+"?a="+encoded_data.encoded;
+                         document.getElementById('loaderTextLink_msg').innerHTML = "click here if page is not automaticaly redirected.";
+                           }).encodeBase64_url(result);
+
+                    } else if (login_data.email==result.email && login_data.password==result.password && result.activation!='Activated'){
+                      
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Account has not been activated, check your email for the activation link.";
+                      document.getElementById('progress_indeter').style.display='none'
+                      openModalMessage();
+
+                    }
+                    else{
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Incorrect Email or Password ...";
+                      document.getElementById('progress_indeter').style.display='none'
+                      openModalMessage();
+                    }
+
+                }).validateLogin(login_data);
+  // openModalMessage();
+    }
+
+}
+
+function openModalMessage(){
+    // document.getElementById("loaderTextLink_msg").style.display="none";
+    const elem = document.getElementById('modalMessage');
+    const instance = M.Modal.init(elem, {dismissible: false});
+    instance.open();
+}
+
+function closeModalMessage(){
+    // document.getElementById("loaderTextLink_msg").style.display="none";
+    const elem = document.getElementById('modalMessage');
+    const instance = M.Modal.init(elem, {dismissible: false});
+    instance.close();
+}
+
+
+function showElement(element){
+  console.log('showElement : ', element)
+  document.getElementById(element).focus();
+  document.getElementById(element).style.borderColor = "red";
+  M.toast({html: 'Please enter the data in requested format!'})
+}
+
+function resendPassResetLink(){
+
+if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("email_fp").value) == false) {
+  showElement('email_fp')
+}else{
+
+document.getElementById('progress_indeter_fp').style.display='block'
+var fp_data = {};
+fp_data.email = document.getElementById("email_fp").value;
+
+console.log(fp_data.email)
+
+google.script.run.withSuccessHandler((result) => {
+                    console.log('result.email :',result.email);
+                    if(fp_data.email==result.email&result.resetLink!=""){
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Password Reset Link with instructions has been ALREADY sent to "+result.email;
+                      document.getElementById('progress_indeter_fp').style.display='none'
+                      openModalMessage();
+                    }else if(fp_data.email==result.email&result.resetLink==""){
+                      
+                      if(sendResetLink(result)=='Success'){
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Password Reset Link with instructions has been sent to "+result.email;
+                      document.getElementById('progress_indeter_fp').style.display='none'
+                      openModalMessage();
+                      }
+                    }else{
+                      var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Incorrect Email ...";
+                      document.getElementById('progress_indeter_fp').style.display='none'
+                      openModalMessage();
+                    }
+
+                }).validate_forget_password(fp_data);
+
+
+    }
+
+
+}
+
+
+function runFirst() {
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["v"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("v : ", value);
+
+        google.script.run.withSuccessHandler((result) => {
+                    console.log('result.email :',result.email);
+                    closeModalMessage();
+                    document.getElementById("reset_email").value = result.email;
+                    M.updateTextFields();
+
+
+                }).reset_password(reset_data=value);
+
+    });
+}
+
+function runFirstaActivation() {
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["n"]);
+        // var modalMessage = document.getElementById("topictext");
+        // modalMessage.innerHTML = "Checking data.. please wait..";
+        // openModalMessage();
+
+        console.log("n : ", value);
+
+        google.script.run.withSuccessHandler((result) => {
+                    console.log('result.email :',result.email);
+                    console.log('result.status :',result.status);
+                    closeModalMessage();
+                    if(result.status== 'Success'){
+                    google.script.run.withSuccessHandler((url) => {
+
+                        document.getElementById("loaderTextLink_resetPass").href = url;
+                        document.getElementById("loaderTextLink_resetPass").innerHTML = ' Your Account has been activated, Click here to login';
+                        var modalMessage = document.getElementById("topictext");
+                        modalMessage.innerHTML = "Congratulations..";
+                        openModalMessage();
+                        }).getUrl();
+
+                    }else{
+
+                        var modalMessage = document.getElementById("topictext");
+                        modalMessage.innerHTML = "Account activation failed or already been activated, Please try to login or contact us for further assistance.";
+                        document.getElementById("loaderTextLink_resetPass").innerHTML = '';
+                        openModalMessage();
+
+                    }
+
+
+                }).activateUser(value);
+
+    });
+}
+
+function resetPassword(){
+
+if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(document.getElementById("reset_email").value) == false) {
+  showElement('reset_email')
+} else if (/^[-a-zA-Z0-9_ ]{1,200}$/.test(document.getElementById("reset_password").value) == false) {
+  showElement('reset_password')
+} else if (/^[-a-zA-Z0-9_ ]{1,200}$/.test(document.getElementById("reset_password_c").value) == false) {
+  showElement('reset_password_c')
+} else if (document.getElementById("reset_password").value != document.getElementById("reset_password_c").value) {
+  showElement('reset_password_c')
+}else{
+
+  var change_pass = {};
+  change_pass.reset_email = document.getElementById("reset_email").value;
+  change_pass.reset_password = document.getElementById("reset_password").value;
+  change_pass.reset_password_c = document.getElementById("reset_password_c").value;
+
+  console.log("validation success!")
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Resetting password.. please wait..";
+  document.getElementById("loaderTextLink_resetPass").innerHTML = '';
+  openModalMessage();
+
+   google.script.run.withSuccessHandler((result) => {
+                    console.log('result.status :',result.status);
+                    closeModalMessage();
+                    if(result.status=="Success"){
+
+                      google.script.run.withSuccessHandler((url) => {
+
+                          document.getElementById("loaderTextLink_resetPass").href = url;
+                          document.getElementById("loaderTextLink_resetPass").innerHTML = 'Click here to login';
+                        }).getUrl();
+
+                        var modalMessage = document.getElementById("topictext");
+                        modalMessage.innerHTML = "Password changed Successfully..";
+                        document.getElementById("loaderTextLink_resetPass").innerHTML = '';
+                        openModalMessage();
+                    }else{
+                        var modalMessage = document.getElementById("topictext");
+                        modalMessage.innerHTML = "Resetting password.. Failed..";
+                        document.getElementById("loaderTextLink_resetPass").innerHTML = '';
+                        openModalMessage();
+
+                    }
+
+                }).reset_password_change_pass(change_pass);
+
+  }
+
+}
+
+function sendResetLink(reset_data){
+
+    google.script.run.withSuccessHandler((key) => {
+                        google.script.run.withSuccessHandler((url) => {
+                            var link = url+"?v="+key.key;
+                            var emailData = {};
+                            emailData.link = link;
+                            emailData.email = reset_data.email;
+                            console.log("url : ",link)
+                            google.script.run.withSuccessHandler((status) => {
+
+                              if (status=="Success"){
+                                var modalMessage = document.getElementById("topictext");
+                                modalMessage.innerHTML = "Password Reset Link with instructions has been sent to "+reset_data.email;
+                                document.getElementById('progress_indeter_fp').style.display='none'
+                                openModalMessage();
+                            }
+
+                              }).sendResetEmail(emailData);
+
+                          }).getUrl();
+                        }).setResetKey(reset_data);
+
+}
+
+function refreshLogin(){
+
+  google.script.run.withSuccessHandler((url) => {
+      window.open(url,"_top");
+        }).getUrl();
+
+}
+
+function getUrl(){
+  var url = '';
+  google.script.run.withSuccessHandler((url) => {
+        url = url
+        console.log('url :',url)}).getUrl();
+  return url
+}
+
+
+
+function runAfterLogin() {
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["a"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("m : ", value);
+
+        google.script.run.withSuccessHandler((result) => {
+                    console.log('result.email :',result.email);
+                    closeModalMessage();
+                    document.getElementById("reset_email").value = result.email;
+                    M.updateTextFields();
+
+
+                }).reset_password(reset_data=value);
+
+    });
+}
+
+function runFirst_DecodeVal() {
+
+  console.log('runFirst_DecodeVal Initiated')
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["a"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("a : ", value);
+
+        google.script.run.withSuccessHandler((result) => {
+                    console.log('result.slmc :',result);
+                    var slmc = 
+                    document.getElementById("slmc_nu").value = result;
+                    M.updateTextFields();
+
+                    closeModalMessage();
+                    loadResearchData(result);
+
+
+                }).decodeBase64(value);
+
+    });
+}
+
+function loadResearchData(slmc){
+
+  console.log('loadResearchData(slmc) : ',slmc)
+
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Retrieving Data.. please wait..";
+  document.getElementById('progress_indeter').style.display='block';
+  openModalMessage();
+
+
+  google.script.run.withSuccessHandler((researchData) => {
+                    // console.log('result.slmc :',result);
+                    // document.getElementById("slmc_nu").value = researchData[0][5];
+                    // M.updateTextFields();
+                    console.log('researchData : ',researchData)
+
+                    // closeModalMessage();
+                    // document.getElementById('progress_indeter').style.display='none';
+
+                    updateResearchListforSLMC(researchData)
+
+
+                }).retrieveResearchData(slmc);
+
+
+}
+
+
+function updateResearchListforSLMC(researchData) {
+
+    var id = 'research_list';
+    var options = '';
+    for (var i = 0; i < researchData.length; i++) {
+        options += '<option value="' + researchData[i][0][4] +' | PI SLMC : ' + researchData[i][0][6] + '" />';
+    }
+    document.getElementById(id).innerHTML = options;
+
+    closeModalMessage();
+    document.getElementById('progress_indeter').style.display='none';
+}
+
+
+function retrieveResearchView(researchID='33333'){
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Retrieving Data.. please wait..";
+  document.getElementById('progress_indeter').style.display='block';
+  openModalMessage();
+
+
+  google.script.run.withSuccessHandler((researchData) => {
+
+                    console.log('researchData',researchData[0][0][3]);
+                    updateResearchListforSLMC(researchData);
+                    createTableMain();
+
+                }).retrieveResearchData(slmc);
+
+}
+
+
+function runFirst_researchView() {
+
+  console.log('runFirst_researchView')
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["r"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("r : ", value);
+
+        google.script.run.withSuccessHandler((decodedRID) => {
+                    console.log('decodedRID :',decodedRID);
+                    document.getElementById("re_ID_view").value = decodedRID;
+                    M.updateTextFields();
+
+                    // closeModalMessage();
+
+                    google.script.run.withSuccessHandler((researchsForRIDData) => {
+                    console.log('researchsForRIDData :',researchsForRIDData);
+                    document.getElementById("slmc_pi_view").value = researchsForRIDData[0][0][6];
+                    document.getElementById("nic_pi_view").value = researchsForRIDData[0][0][7];
+                    document.getElementById("name_pi_view").value = researchsForRIDData[0][0][8];
+
+
+                    document.getElementById("co_1_view").value = researchsForRIDData[0][0][14];
+                    document.getElementById("co_2_view").value = researchsForRIDData[0][0][16];
+                    document.getElementById("co_3_view").value = researchsForRIDData[0][0][18];
+                    document.getElementById("co_4_view").value = researchsForRIDData[0][0][20];
+
+                    if(researchsForRIDData[0][0][9]!=""){
+                    document.getElementById("ci_1_file_view").href = researchsForRIDData[0][0][9];
+                    document.getElementById("ci_1_file_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][9]==""){
+                    document.getElementById("ci_1_file_view").href = "";
+                    document.getElementById("ci_1_file_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][15]!=""){
+                    document.getElementById("ci_2_file_view").href = researchsForRIDData[0][0][15];
+                    document.getElementById("ci_2_file_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][15]==""){
+                    document.getElementById("ci_2_file_view").href = "";
+                    document.getElementById("ci_2_file_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][17]!=""){
+                    document.getElementById("ci_3_file_view").href = researchsForRIDData[0][0][17];
+                    document.getElementById("ci_3_file_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][17]==""){
+                    document.getElementById("ci_3_file_view").href = "";
+                    document.getElementById("ci_3_file_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][19]!=""){
+                    document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][19];
+                    document.getElementById("ci_4_file_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][19]==""){
+                    document.getElementById("ci_4_file_view").href = "";
+                    document.getElementById("ci_4_file_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][21]!=""){
+                    document.getElementById("ci_5_file_view").href = researchsForRIDData[0][0][21];
+                    document.getElementById("ci_5_file_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][21]==""){
+                    document.getElementById("ci_5_file_view").href = "";
+                    document.getElementById("ci_5_file_view").innerHTML = "";}
+
+                    $("input[name=pi_claim_type]").val([researchsForRIDData[0][0][10]]);
+
+                    if (researchsForRIDData[0][0][10] == 'pi_claim_no') {
+                        $('#' + 'pi_claim_no').removeClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][10] == 'pi_claim_yes') {
+                        $('#' + 'pi_claim_no').addClass('none');
+                    }
+
+                    if(researchsForRIDData[0][0][11]!=""){
+                    document.getElementById("file_pi_no_obj").href = researchsForRIDData[0][0][11];
+                    document.getElementById("file_pi_no_obj").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][11]==""){
+                    document.getElementById("file_pi_no_obj").href = "";
+                    document.getElementById("file_pi_no_obj").innerHTML = "";}
+
+                    $("input[name=pi_contact_type]").val([researchsForRIDData[0][0][12]]);
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_yes') {
+                        $('#' + 'pi_contact_no').removeClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_no') {
+                        $('#' + 'pi_contact_no').addClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_yes') {
+                    document.getElementById("pi_contact_nominated").value = researchsForRIDData[0][0][13];}
+                    
+
+                    // document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][13];
+                    // document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][13];
+                    
+                    document.getElementById("ra_type_view").value = researchsForRIDData[0][0][22];
+                    document.getElementById("ra_sub_type_view").value = researchsForRIDData[0][0][23];
+                    document.getElementById("r_topic_view").value = researchsForRIDData[0][0][24];
+                    // document.getElementById("file_raa_view").value = researchsForRIDData[0][0][17];
+
+                    
+                    if(researchsForRIDData[0][0][25]!=""){
+                    document.getElementById("file_raa1_view").href = researchsForRIDData[0][0][25];
+                    document.getElementById("file_raa1_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][25]==""){
+                    document.getElementById("file_raa1_view").href = "";
+                    document.getElementById("file_raa1_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][26]!=""){
+                    document.getElementById("file_raa2_view").href = researchsForRIDData[0][0][26];
+                    document.getElementById("file_raa2_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][26]==""){
+                    document.getElementById("file_raa2_view").href = "";
+                    document.getElementById("file_raa2_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][27]!=""){
+                    document.getElementById("file_raa3_view").href = researchsForRIDData[0][0][27];
+                    document.getElementById("file_raa3_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][27]==""){
+                    document.getElementById("file_raa3_view").href = "";
+                    document.getElementById("file_raa3_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][28]!=""){
+                    document.getElementById("file_raa4_view").href = researchsForRIDData[0][0][28];
+                    document.getElementById("file_raa4_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][28]==""){
+                    document.getElementById("file_raa4_view").href = "";
+                    document.getElementById("file_raa4_view").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][29]!=""){
+                    document.getElementById("file_raa5_view").href = researchsForRIDData[0][0][29];
+                    document.getElementById("file_raa5_view").innerHTML = "click here";}
+                    if(researchsForRIDData[0][0][29]==""){
+                    document.getElementById("file_raa5_view").href = "";
+                    document.getElementById("file_raa5_view").innerHTML = "";}
+                    
+                    // document.getElementById("file_raa1_view").href = researchsForRIDData[0][0][17];
+                    // document.getElementById("file_raa2_view").href = researchsForRIDData[0][0][18];
+                    // document.getElementById("file_raa3_view").href = researchsForRIDData[0][0][19];
+                    // document.getElementById("file_raa4_view").href = researchsForRIDData[0][0][20];
+                    // document.getElementById("file_raa5_view").here = researchsForRIDData[0][0][21];
+
+                    
+                    $("input[name=gov_fund]").val([researchsForRIDData[0][0][31]]);
+                    $("input[name=unfinished_ra]").val([researchsForRIDData[0][0][32]]);
+
+                    document.getElementById("r_submitDate_view").value = researchsForRIDData[0][0][34];
+                    document.getElementById("r_status_view").value = researchsForRIDData[0][0][3];
+
+                    // document.getElementById("r_submitDate_view").innerHTML = researchsForRIDData[0][0][15];
+                    // document.getElementById("r_status_view").innerHTML = researchsForRIDData[0][0][15];
+                   
+                    
+                    M.updateTextFields();
+
+                    var form = document.getElementById("myForm1");
+                    var elements = form.elements;
+                    for (var i = 0, len = elements.length; i < len; ++i) {
+                        elements[i].disabled = true;
+                       }
+
+
+                    if (researchsForRIDData[0][0][1].toString() == '1') {
+                        $('#btn_edit_application_view').addClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][1].toString() == '0') {
+                        $('#btn_edit_application_view').removeClass('none');
+                    }
+
+                    closeModalMessage();
+                    // loadResearchData(decodedRID);
+
+
+                }).retrieveResearchsForRID(decodedRID);
+                    // loadResearchData(decodedRID);
+
+
+                }).decodeBase64_for_view(value);
+
+    });
+}
+
+
+function viewYourResearches(){
+  if (!document.getElementById("re_list").value) {
+  showElement('re_list')  
+}else{
+  var researchID_data = document.getElementById("re_list").value;
+  var researchID = researchID_data.split(" | ")[0];
+  console.log('researchID_data : ',researchID_data)
+  console.log('researchID : ',researchID)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+
+          // closeModalMessage();
+          window.open(encoded_data.url+"?r="+encoded_data.encoded,'_top')
+      }).encodeBase64_researchID(researchID);
+
+  }
+
+}
+
+function addNew(){
+
+  var value = {};
+  value.slmc_nu = document.getElementById("slmc_nu").value;
+
+  console.log('slmc_nu : ',value)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+
+          // closeModalMessage();
+          window.open(encoded_data.url+"?m="+encoded_data.encoded,'_top')
+      }).encodeBase64_url(value);
+
+}
+
+function runFirstMainPage(){
+
+  console.log('runFirstMainPage')
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["m"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("m main : ", value);
+
+        google.script.run.withSuccessHandler((decoded_slmc) => {
+                    console.log('decoded_slmc :',decoded_slmc);
+                    document.getElementById("slmc_pi").value = decoded_slmc;
+                    document.getElementById("pi_type_yes").checked = true;
+                    // document.getElementById('pi_yes').style.display='block';
+
+                    $("input[name=pi_type]").val(['pi_no']);
+                    $('#' + 'pi_yes').addClass('none');
+         
+
+
+
+                    M.updateTextFields();
+
+                    // closeModalMessage();
+
+                    google.script.run.withSuccessHandler((login_dataRetrievedForSLMC) => {
+                    console.log('login_dataRetrievedForSLMC :',login_dataRetrievedForSLMC);
+                    document.getElementById("nic_pi").value = login_dataRetrievedForSLMC[0][0][8];
+                    document.getElementById("name_pi").value = login_dataRetrievedForSLMC[0][0][10].toString().toUpperCase()+" "+
+                    login_dataRetrievedForSLMC[0][0][11].toString().toUpperCase();
+
+                    // document.getElementById('re_ID').value = 'RA'+(Math.floor(Date.now() / 1000)).toString();
+                    document.getElementById('re_ID').value = 'RA0'+ (Math.floor(Date.now() / 1000)).toString() +
+                    '/'+(new Date().toLocaleDateString("en-US")).toString();
+                    
+                   
+                    
+                    M.updateTextFields();
+
+
+
+                    google.script.run.withSuccessHandler((dataUsers) => {
+
+                      updateResearchersList(dataUsers);
+                    
+                      }).retrieveUserData();
+
+                    // closeModalMessage();
+                }).retrieveLoginDataforSLMC(decoded_slmc);
+                    // loadResearchData(decodedRID);
+
+
+                }).decodeBase64(value);
+
+    });
+
+
+}
+
+
+function updateResearchersList(dataUsers) {
+
+    var id = 'investigator_list';
+    var options = '';
+    for (var i = 0; i < dataUsers.length; i++) {
+        options += '<option value="' + dataUsers[i][0].toString().toUpperCase() +' | ' +  
+        dataUsers[i][1].toString().toUpperCase() + ' ' +dataUsers[i][2].toString().toUpperCase() +'" />';
+    }
+    document.getElementById(id).innerHTML = options;
+
+    closeModalMessage();
+    document.getElementById('progress_indeter').style.display='none';
+}
+
+
+
+
+function save(){
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Saving Data.. please wait..";
+  openModalMessage();
+  
+  var saveData = {};
+
+  saveData.radio_pi_type = $('input[name="pi_type"]:checked').val();
+  saveData.re_ID = document.getElementById("re_ID").value;
+  saveData.slmc_pi = document.getElementById("slmc_pi").value;
+  saveData.nic_pi = document.getElementById("nic_pi").value;
+  saveData.name_pi = document.getElementById("name_pi").value;
+  saveData.co_1 = document.getElementById("co_1").value;
+  saveData.co_2 = document.getElementById("co_2").value;
+  saveData.co_3 = document.getElementById("co_3").value;
+  saveData.co_4 = document.getElementById("co_4").value;
+  saveData.ra_type = document.getElementById("ra_type").value;
+  saveData.ra_sub_type = document.getElementById("ra_sub_type").value;
+  saveData.r_topic = document.getElementById("r_topic").value;
+  // saveData.file_raa = document.getElementById("file_raa").value;
+
+  saveData.file_raa_ci_1 = filesGlobal_file_raa_ci_1;
+  saveData.file_raa_ci_2 = filesGlobal_file_raa_ci_2;
+  saveData.file_raa_ci_3 = filesGlobal_file_raa_ci_3;
+  saveData.file_raa_ci_4 = filesGlobal_file_raa_ci_4;
+  saveData.file_raa_ci_5 = filesGlobal_file_raa_ci_5;
+
+  saveData.file_pi_no_obj = filesGlobal_file_pi_no_obj;
+
+  saveData.radio_pi_claim_type = $('input[name="pi_claim_type"]:checked').val();
+  saveData.radio_pi_contact_type = $('input[name="pi_contact_type"]:checked').val();
+
+  saveData.pi_contact_nominated = document.getElementById("pi_contact_nominated").value;
+
+  saveData.file_raa1 = filesGlobal_file_raa1;
+  saveData.file_raa2 = filesGlobal_file_raa2;
+  saveData.file_raa3 = filesGlobal_file_raa3;
+  saveData.file_raa4 = filesGlobal_file_raa4;
+  saveData.file_raa5 = filesGlobal_file_raa5;
+
+  saveData.radio_gov_fund = $('input[name="gov_fund"]:checked').val();
+  saveData.radio_unfinished_ra = $('input[name="unfinished_ra"]:checked').val();
+  saveData.radio_radioAgree = $('input[name="radioAgree"]:checked').val();
+
+  
+
+
+  google.script.run.withSuccessHandler((saveStatusBack) => {
+
+                      console.log('saveStatusBack.status : Success',saveStatusBack.status)
+                      // closeModalMessage();
+                      // var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Your Data saved successfuly!";
+                      setTimeout("closeModalMessage()", 3000);
+                      // openModalMessage();
+                      // closeModalMessage();
+                    
+                      }).saveToSheet(saveData);
+
+
+}
+
+function upload(){
+
+  console.log("upload() clicked")
+
+if (!document.getElementById("file_raa_ci_1").value) {
+  showElement('file_raa_ci_1')
+// } else if (!document.getElementById("file_raa_ci_2").value) {
+//   showElement('file_raa_ci_2')
+// } else if (!document.getElementById("file_raa_ci_3").value) {
+//   showElement('file_raa_ci_3')
+// } else if (!document.getElementById("file_raa_ci_4").value) {
+//   showElement('file_raa_ci_4')
+// } else if (!document.getElementById("file_raa_ci_5").value) {
+//   showElement('file_raa_ci_5')
+
+} else if ($('input[name=pi_claim_type]:checked').length < 1) {
+    showElement('pi_claim_type_yes')
+} else if (document.getElementById('pi_claim_type_no').checked && !document.getElementById('file_pi_no_obj').value) {
+  showElement('file_pi_no_obj')
+
+} else if ($('input[name=pi_contact_type]:checked').length < 1) {
+    showElement('pi_contact_type_yes')
+} else if (document.getElementById('pi_contact_type_yes').checked && !document.getElementById('pi_contact_nominated').value) {
+  showElement('pi_contact_nominated')
+
+
+// } else if (!document.getElementById("file_raa1").value) {
+//   showElement('file_raa1')
+// } else if (!document.getElementById("file_raa2").value) {
+//   showElement('file_raa2')
+// } else if (!document.getElementById("file_raa3").value) {
+//   showElement('file_raa3')
+// } else if (!document.getElementById("file_raa4").value) {
+//   showElement('file_raa4')
+// } else if (!document.getElementById("file_raa5").value) {
+//   showElement('file_raa5')
+
+} else if ($('input[name=gov_fund]:checked').length < 1) {
+    showElement('gov_fund_yes')
+
+} else if ($('input[name=unfinished_ra]:checked').length < 1) {
+    showElement('unfinished_ra_yes')
+
+} else if (!document.getElementById('radioAgreed').checked){
+  showElement('radioAgreed')
+
+
+}else{
+
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Uploading Data.. please wait..";
+  openModalMessage();
+  
+  var re_ID = document.getElementById("re_ID").value;
+  // saveData.slmc_pi = document.getElementById("slmc_pi").value;
+  // saveData.co_1 = document.getElementById("co_1").value;
+  // saveData.co_2 = document.getElementById("co_2").value;
+  // saveData.co_3 = document.getElementById("co_3").value;
+  // saveData.co_4 = document.getElementById("co_4").value;
+  // saveData.ra_type = document.getElementById("ra_type").value;
+  // saveData.ra_sub_type = document.getElementById("ra_sub_type").value;
+  // saveData.r_topic = document.getElementById("r_topic").value;
+  // saveData.file_raa = document.getElementById("file_raa").value;
+
+
+
+  letter_upload_common_function_1(fileInputID="file_raa_ci_1",re_ID);
+
+    }
+
+}
+
+function letter_upload_common_function_1(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_1 = id;
+                    console.log("URL filesGlobal_file_raa_ci_1: ",filesGlobal_file_raa_ci_1);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_2(fileInputID="file_raa_ci_2",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_2(fileInputID="file_raa_ci_2",re_ID)}
+}
+
+
+function letter_upload_common_function_2(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_2 = id;
+                    console.log("URL filesGlobal_file_raa_ci_2: ",filesGlobal_file_raa_ci_2);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_3(fileInputID="file_raa_ci_3",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_3(fileInputID="file_raa_ci_3",re_ID)}
+}
+
+function letter_upload_common_function_3(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_3 = id;
+                    console.log("URL filesGlobal_file_raa_ci_3: ",filesGlobal_file_raa_ci_3);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_4(fileInputID="file_raa_ci_4",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_4(fileInputID="file_raa_ci_4",re_ID)}
+}
+
+
+
+function letter_upload_common_function_4(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_4 = id;
+                    console.log("URL filesGlobal_file_raa_ci_4: ",filesGlobal_file_raa_ci_4);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_5(fileInputID="file_raa_ci_5",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_5(fileInputID="file_raa_ci_5",re_ID)}
+}
+
+function letter_upload_common_function_5(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_4 = id;
+                    console.log("URL filesGlobal_file_raa_ci_5: ",filesGlobal_file_raa_ci_5);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_6(fileInputID="file_raa1",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_6(fileInputID="file_raa1",re_ID)}
+}
+
+function letter_upload_common_function_6(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa1 = id;
+                    console.log("URL filesGlobal_file_raa1: ",filesGlobal_file_raa1);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_7(fileInputID="file_raa2",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_7(fileInputID="file_raa2",re_ID);}
+}
+
+function letter_upload_common_function_7(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa2 = id;
+                    console.log("URL filesGlobal_file_raa2: ",filesGlobal_file_raa2);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_8(fileInputID="file_raa3",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_8(fileInputID="file_raa3",re_ID);}
+}
+
+function letter_upload_common_function_8(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa3 = id;
+                    console.log("URL filesGlobal_file_raa3: ",filesGlobal_file_raa3);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_9(fileInputID="file_raa4",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_9(fileInputID="file_raa4",re_ID);}
+}
+
+function letter_upload_common_function_9(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa4 = id;
+                    console.log("URL filesGlobal_file_raa4: ",filesGlobal_file_raa4);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_10(fileInputID="file_raa5",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_10(fileInputID="file_raa5",re_ID);}
+}
+
+function letter_upload_common_function_10(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa5 = id;
+                    console.log("URL filesGlobal_file_raa5: ",filesGlobal_file_raa5);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_11(fileInputID="file_pi_no_obj",re_ID);
+                    // save();
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_11(fileInputID="file_pi_no_obj",re_ID);}
+}
+
+function letter_upload_common_function_11(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_pi_no_obj = id;
+                    console.log("URL file_pi_no_obj: ",filesGlobal_file_pi_no_obj);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    // letter_upload_common_function_5(fileInputID="file_raa5",saveData);
+                    save();
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{save()}
+}
+
+
+function editYourResearches(){
+  if (!document.getElementById("re_ID_view").value) {
+  showElement('re_ID_view')  
+}else{
+  var researchID = document.getElementById("re_ID_view").value;
+
+  console.log('researchID : ',researchID)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+
+          // closeModalMessage();
+          window.open(encoded_data.url+"?e="+encoded_data.encoded,'_top')
+      }).encodeBase64_researchID(researchID);
+
+  }
+
+}
+
+function runFirstMainPageEdit(){
+
+  console.log('runFirstMainPageEdit')
+
+
+    google.script.url.getLocation(function(location) {
+        var value = (location.parameters["e"]);
+        var modalMessage = document.getElementById("topictext");
+        modalMessage.innerHTML = "Loading Data.. please wait..";
+         openModalMessage();
+
+        console.log("r : ", value);
+
+        google.script.run.withSuccessHandler((decodedRID) => {
+                    console.log('decodedRID :',decodedRID);
+
+                    $("input[name=pi_type]").val(['pi_yes']);
+                    $('#' + 'pi_yes').removeClass('none');
+
+                    document.getElementById("re_ID_edit").value = decodedRID;
+                    M.updateTextFields();
+
+                    // closeModalMessage();
+
+                    google.script.run.withSuccessHandler((researchsForRIDData) => {
+                    console.log('researchsForRIDData :',researchsForRIDData);
+                    document.getElementById("slmc_pi_edit").value = researchsForRIDData[0][0][6];
+                    document.getElementById("nic_pi_edit").value = researchsForRIDData[0][0][7];
+                    document.getElementById("name_pi_edit").value = researchsForRIDData[0][0][8];
+                    document.getElementById("co_1_edit").value = researchsForRIDData[0][0][14];
+                    document.getElementById("co_2_edit").value = researchsForRIDData[0][0][16];
+                    document.getElementById("co_3_edit").value = researchsForRIDData[0][0][18];
+                    document.getElementById("co_4_edit").value = researchsForRIDData[0][0][20];
+
+                    if(researchsForRIDData[0][0][9]!=""){
+                    document.getElementById("file_raa_ci_1_label_edit").href = researchsForRIDData[0][0][9];
+                    document.getElementById("file_raa_ci_1_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][9]==""){
+                    document.getElementById("file_raa_ci_1_label_edit").href = "";
+                    document.getElementById("file_raa_ci_1_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_1_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][15]!=""){
+                    document.getElementById("file_raa_ci_2_label_edit").href = researchsForRIDData[0][0][15];
+                    document.getElementById("file_raa_ci_2_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][15]==""){
+                    document.getElementById("file_raa_ci_2_label_edit").href = "";
+                    document.getElementById("file_raa_ci_2_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_2_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][17]!=""){
+                    document.getElementById("file_raa_ci_3_label_edit").href = researchsForRIDData[0][0][17];
+                    document.getElementById("file_raa_ci_3_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][17]==""){
+                    document.getElementById("file_raa_ci_3_label_edit").href = "";
+                    document.getElementById("file_raa_ci_3_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_3_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][19]!=""){
+                    document.getElementById("file_raa_ci_4_label_edit").href = researchsForRIDData[0][0][19];
+                    document.getElementById("file_raa_ci_4_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][19]==""){
+                    document.getElementById("file_raa_ci_4_label_edit").href = "";
+                    document.getElementById("file_raa_ci_4_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_4_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][21]!=""){
+                    document.getElementById("file_raa_ci_5_label_edit").href = researchsForRIDData[0][0][21];
+                    document.getElementById("file_raa_ci_5_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][21]==""){
+                    document.getElementById("file_raa_ci_5_label_edit").href = "";
+                    document.getElementById("file_raa_ci_5_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_4_btn_edit").style.display = 'none';
+
+                     M.updateTextFields();
+
+
+
+                    $("input[name=pi_claim_type]").val([researchsForRIDData[0][0][10]]);
+
+                    if (researchsForRIDData[0][0][10] == 'pi_claim_no') {
+                        $('#' + 'pi_claim_no').removeClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][10] == 'pi_claim_yes') {
+                        $('#' + 'pi_claim_no').addClass('none');
+                    }
+
+
+                    if(researchsForRIDData[0][0][11]!=""){
+                    document.getElementById("file_pi_no_obj_label_edit").href = researchsForRIDData[0][0][11];
+                    document.getElementById("file_pi_no_obj_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][11]==""){
+                    document.getElementById("file_pi_no_obj_label_edit").href = "";
+                    document.getElementById("file_pi_no_obj_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa_ci_4_btn_edit").style.display = 'none';
+
+                    // if(researchsForRIDData[0][0][11]!=""){
+                    // document.getElementById("file_pi_no_obj").href = researchsForRIDData[0][0][11];
+                    // document.getElementById("file_pi_no_obj").innerHTML = "click here";}
+                    // if(researchsForRIDData[0][0][11]==""){
+                    // document.getElementById("file_pi_no_obj").href = "";
+                    // document.getElementById("file_pi_no_obj").innerHTML = "";}
+
+                    $("input[name=pi_contact_type]").val([researchsForRIDData[0][0][12]]);
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_yes') {
+                        $('#' + 'pi_contact_no').removeClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_no') {
+                        $('#' + 'pi_contact_no').addClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][12] == 'pi_contact_yes') {
+                    document.getElementById("pi_contact_nominated").value = researchsForRIDData[0][0][13];}
+
+
+                    // if(researchsForRIDData[0][0][11]!=""){
+                    // document.getElementById("ci_3_file_view").href = researchsForRIDData[0][0][11];
+                    // document.getElementById("ci_3_file_view").innerHTML = "click here";}
+                    // if(researchsForRIDData[0][0][11]==""){
+                    // document.getElementById("ci_3_file_view").href = "";
+                    // document.getElementById("ci_3_file_view").innerHTML = "";}
+
+                    // if(researchsForRIDData[0][0][13]!=""){
+                    // document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][13];
+                    // document.getElementById("ci_4_file_view").innerHTML = "click here";}
+                    // if(researchsForRIDData[0][0][13]==""){
+                    // document.getElementById("ci_4_file_view").href = "";
+                    // document.getElementById("ci_4_file_view").innerHTML = "";}
+
+                    // document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][13];
+                    // document.getElementById("ci_4_file_view").href = researchsForRIDData[0][0][13];
+                    
+                    document.getElementById("ra_type_edit").value = researchsForRIDData[0][0][22];
+                    document.getElementById("ra_sub_type_edit").value = researchsForRIDData[0][0][23];
+                    document.getElementById("r_topic_edit").value = researchsForRIDData[0][0][24];
+                    // document.getElementById("file_raa_edit").value = researchsForRIDData[0][0][17];
+
+                    M.updateTextFields();
+
+                    
+                    // if(researchsForRIDData[0][0][17]!=""){
+                    // document.getElementById("file_raa1_edit").href = researchsForRIDData[0][0][17];
+                    // document.getElementById("file_raa1_edit").innerHTML = "click here";}
+                    // if(researchsForRIDData[0][0][17]==""){
+                    // document.getElementById("file_raa1_edit").href = "";
+                    // document.getElementById("file_raa1_edit").innerHTML = "";}
+
+                    if(researchsForRIDData[0][0][25]!=""){
+                    document.getElementById("file_raa1_label_edit").href = researchsForRIDData[0][0][25];
+                    document.getElementById("file_raa1_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][25]==""){
+                    document.getElementById("file_raa1_label_edit").href = "";
+                    document.getElementById("file_raa1_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa1_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][26]!=""){
+                    document.getElementById("file_raa2_label_edit").href = researchsForRIDData[0][0][26];
+                    document.getElementById("file_raa2_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][26]==""){
+                    document.getElementById("file_raa2_label_edit").href = "";
+                    document.getElementById("file_raa2_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa2_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][27]!=""){
+                    document.getElementById("file_raa4_label_edit").href = researchsForRIDData[0][0][27];
+                    document.getElementById("file_raa4_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][27]==""){
+                    document.getElementById("file_raa4_label_edit").href = "";
+                    document.getElementById("file_raa4_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa4_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][28]!=""){
+                    document.getElementById("file_raa5_label_edit").href = researchsForRIDData[0][0][28];
+                    document.getElementById("file_raa5_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][28]==""){
+                    document.getElementById("file_raa5_label_edit").href = "";
+                    document.getElementById("file_raa5_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa5_btn_edit").style.display = 'none';
+
+                    if(researchsForRIDData[0][0][29]!=""){
+                    document.getElementById("file_raa3_label_edit").href = researchsForRIDData[0][0][29];
+                    document.getElementById("file_raa3_label_edit").innerHTML = "File loaded! click here";}
+                    if(researchsForRIDData[0][0][29]==""){
+                    document.getElementById("file_raa3_label_edit").href = "";
+                    document.getElementById("file_raa3_label_edit").innerHTML = "";}
+                    // document.getElementById("file_raa3_btn_edit").style.display = 'none';
+                    
+                    // document.getElementById("file_raa1_view").href = researchsForRIDData[0][0][17];
+                    // document.getElementById("file_raa2_view").href = researchsForRIDData[0][0][18];
+                    // document.getElementById("file_raa3_view").href = researchsForRIDData[0][0][19];
+                    // document.getElementById("file_raa4_view").href = researchsForRIDData[0][0][20];
+                    // document.getElementById("file_raa5_view").here = researchsForRIDData[0][0][21];
+
+                    $("input[name=gov_fund]").val([researchsForRIDData[0][0][31]]);
+                    $("input[name=unfinished_ra]").val([researchsForRIDData[0][0][32]]);
+
+                    document.getElementById("r_status_edit").value = researchsForRIDData[0][0][3];
+
+                     M.updateTextFields();
+
+                    // document.getElementById("r_submitDate_view").value = researchsForRIDData[0][0][25];
+                    // document.getElementById("r_status_view").value = researchsForRIDData[0][0][2];
+
+                    // document.getElementById("ra_submit_date").innerHTML = researchsForRIDData[0][0][15];
+                    // document.getElementById("ra_progress").innerHTML = researchsForRIDData[0][0][15];
+
+                    if (researchsForRIDData[0][0][1].toString() == '1') {
+
+                    var form = document.getElementById("myForm1");
+                    var elements = form.elements;
+                    for (var i = 0, len = elements.length; i < len; ++i) {
+                        elements[i].disabled = true;
+                       }
+                    }
+
+
+                    if (researchsForRIDData[0][0][1].toString() == '1') {
+                        $('#btn_submit_application_edit').addClass('none');
+                    }
+
+                    if (researchsForRIDData[0][0][1].toString() == '0') {
+                        $('#btn_submit_application_edit').removeClass('none');
+                    }
+                   
+                    
+                    M.updateTextFields();
+
+                    google.script.run.withSuccessHandler((dataUsers) => {
+
+                      updateResearchersList(dataUsers);
+                       closeModalMessage();
+                    
+                      }).retrieveUserData();
+
+                    // closeModalMessage();
+                    // loadResearchData(decodedRID);
+
+
+                }).retrieveResearchsForRID(decodedRID);
+                    // loadResearchData(decodedRID);
+
+
+                }).decodeBase64_for_view(value);
+
+    });
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// recorrection page functions
+
+function recorrect_submit(){
+
+}
+
+function save_edit(){
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Saving Data.. please wait..";
+  openModalMessage();
+  
+  var saveData = {};
+
+  saveData.radio_pi_type = $('input[name="pi_type"]:checked').val();
+  saveData.re_ID = document.getElementById("re_ID_edit").value;
+  saveData.slmc_pi = document.getElementById("slmc_pi_edit").value;
+  saveData.nic_pi = document.getElementById("nic_pi_edit").value;
+  saveData.name_pi = document.getElementById("name_pi_edit").value;
+
+  saveData.co_1 = document.getElementById("co_1_edit").value;
+  saveData.co_2 = document.getElementById("co_2_edit").value;
+  saveData.co_3 = document.getElementById("co_3_edit").value;
+  saveData.co_4 = document.getElementById("co_4_edit").value;
+  saveData.ra_type = document.getElementById("ra_type_edit").value;
+  saveData.ra_sub_type = document.getElementById("ra_sub_type_edit").value;
+  saveData.r_topic = document.getElementById("r_topic_edit").value;
+  // saveData.file_raa = document.getElementById("file_raa").value;
+
+  saveData.file_raa_pi = filesGlobal_file_raa_ci_5;
+  saveData.file_raa_ci_1 = filesGlobal_file_raa_ci_1;
+  saveData.file_raa_ci_2 = filesGlobal_file_raa_ci_2;
+  saveData.file_raa_ci_3 = filesGlobal_file_raa_ci_3;
+  saveData.file_raa_ci_4 = filesGlobal_file_raa_ci_4;
+  
+
+  saveData.file_pi_no_obj = filesGlobal_file_pi_no_obj;
+
+  saveData.radio_pi_claim_type = $('input[name="pi_claim_type"]:checked').val();
+  saveData.radio_pi_contact_type = $('input[name="pi_contact_type"]:checked').val();
+
+  saveData.pi_contact_nominated = document.getElementById("pi_contact_nominated").value;
+
+  saveData.file_raa1 = filesGlobal_file_raa1;
+  saveData.file_raa2 = filesGlobal_file_raa2;
+  saveData.file_raa3 = filesGlobal_file_raa3;
+  saveData.file_raa4 = filesGlobal_file_raa4;
+  saveData.file_raa5 = filesGlobal_file_raa5;
+
+  saveData.radio_gov_fund = $('input[name="gov_fund"]:checked').val();
+  saveData.radio_unfinished_ra = $('input[name="unfinished_ra"]:checked').val();
+  saveData.radio_radioAgree = $('input[name="radioAgree"]:checked').val();
+
+  google.script.run.withSuccessHandler((saveStatusBack) => {
+
+                      console.log('saveStatusBack.status : Success',saveStatusBack.status)
+                      // closeModalMessage();
+                      // var modalMessage = document.getElementById("topictext");
+                      modalMessage.innerHTML = "Your Data saved successfuly!";
+                      if(saveStatusBack.status=='Error 101'){
+                        modalMessage.innerHTML = saveStatusBack.status + ' : Failed to save your data! contact ET&R System administrator for assistance.';
+                      }
+                      // setTimeout("closeModalMessage()", 3000);
+                      // openModalMessage();
+                      // closeModalMessage();
+
+                      var researchID = document.getElementById("re_ID_edit").value;
+
+                      console.log('researchID : ',researchID)
+
+                      google.script.run.withSuccessHandler((encoded_data) => {
+                      if(saveStatusBack.status=='Found'){
+                      window.open(encoded_data.url+"?e="+encoded_data.encoded,'_top')
+                       }
+
+                       document.getElementById("loaderTextLink_resetPass").href = encoded_data.url+"?e="+encoded_data.encoded; 
+                       document.getElementById("loaderTextLink_resetPass").innerHTML = "click here if this window does not redirected automatically"; 
+
+                      }).encodeBase64_researchID(researchID);
+                    
+                      }).saveToSheet_edit(saveData);
+
+
+}
+
+function upload_edit(){
+
+  console.log("upload_edit() clicked")
+
+if (!document.getElementById("file_raa_ci_1_edit").value && !document.getElementById("file_raa_ci_1_label_edit").innerHTML) {
+  showElement('file_raa_ci_1_edit')
+} else if (!document.getElementById("file_raa_ci_2_edit").value && !document.getElementById("file_raa_ci_2_label_edit").innerHTML) {
+  showElement('file_raa_ci_2_edit')
+} else if (!document.getElementById("file_raa_ci_3_edit").value && !document.getElementById("file_raa_ci_3_label_edit").innerHTML) {
+  showElement('file_raa_ci_3_edit')
+} else if (!document.getElementById("file_raa_ci_4_edit").value && !document.getElementById("file_raa_ci_4_label_edit").innerHTML) {
+  showElement('file_raa_ci_4_edit')
+} else if (!document.getElementById("file_raa_ci_5_edit").value && !document.getElementById("file_raa_ci_5_label_edit").innerHTML) {
+  showElement('file_raa_ci_5_edit')
+
+} else if ($('input[name=pi_claim_type]:checked').length < 1) {
+    showElement('pi_claim_type_yes')
+} else if (document.getElementById('pi_claim_type_no').checked && (!document.getElementById('file_pi_no_obj_edit').value && 
+!document.getElementById('file_pi_no_obj_label_edit').innerHTML)) {
+  showElement('file_pi_no_obj_edit')
+
+} else if ($('input[name=pi_contact_type]:checked').length < 1) {
+    showElement('pi_contact_type_yes')
+} else if (document.getElementById('pi_contact_type_yes').checked && !document.getElementById('pi_contact_nominated').value) {
+  showElement('pi_contact_nominated')
+
+
+} else if (!document.getElementById("file_raa1_edit").value && !document.getElementById("file_raa1_label_edit").innerHTML) {
+  showElement('file_raa1_edit')
+} else if (!document.getElementById("file_raa2_edit").value && !document.getElementById("file_raa2_label_edit").innerHTML) {
+  showElement('file_raa2_edit')
+} else if (!document.getElementById("file_raa3_edit").value && !document.getElementById("file_raa3_label_edit").innerHTML) {
+  showElement('file_raa3_edit')
+} else if (!document.getElementById("file_raa4_edit").value && !document.getElementById("file_raa4_label_edit").innerHTML) {
+  showElement('file_raa4_edit')
+} else if (!document.getElementById("file_raa5_edit").value && !document.getElementById("file_raa5_label_edit").innerHTML) {
+  showElement('file_raa5_edit')
+
+
+} else if ($('input[name=gov_fund]:checked').length < 1) {
+    showElement('gov_fund_yes')
+
+} else if ($('input[name=unfinished_ra]:checked').length < 1) {
+    showElement('unfinished_ra_yes')
+
+} else if (!document.getElementById('radioAgreed').checked){
+  showElement('radioAgreed')
+}else{
+
+
+
+
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Uploading Data.. please wait..";
+  openModalMessage();
+  
+  var re_ID = document.getElementById("re_ID_edit").value;
+  // saveData.slmc_pi = document.getElementById("slmc_pi").value;
+  // saveData.co_1 = document.getElementById("co_1").value;
+  // saveData.co_2 = document.getElementById("co_2").value;
+  // saveData.co_3 = document.getElementById("co_3").value;
+  // saveData.co_4 = document.getElementById("co_4").value;
+  // saveData.ra_type = document.getElementById("ra_type").value;
+  // saveData.ra_sub_type = document.getElementById("ra_sub_type").value;
+  // saveData.r_topic = document.getElementById("r_topic").value;
+  // saveData.file_raa = document.getElementById("file_raa").value;
+
+
+
+  letter_upload_common_function_1_edit(fileInputID="file_raa_ci_1_edit",re_ID);
+
+    }
+
+}
+
+function letter_upload_common_function_1_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_1 = id;
+                    console.log("URL filesGlobal_file_raa_ci_1: ",filesGlobal_file_raa_ci_1);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_2_edit(fileInputID="file_raa_ci_2_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_2_edit(fileInputID="file_raa_ci_2_edit",re_ID)}
+}
+
+
+function letter_upload_common_function_2_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_2 = id;
+                    console.log("URL filesGlobal_file_raa_ci_2: ",filesGlobal_file_raa_ci_2);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_3_edit(fileInputID="file_raa_ci_3_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_3_edit(fileInputID="file_raa_ci_3_edit",re_ID)}
+}
+
+function letter_upload_common_function_3_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_3 = id;
+                    console.log("URL filesGlobal_file_raa_ci_3: ",filesGlobal_file_raa_ci_3);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_4_edit(fileInputID="file_raa_ci_4_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_4_edit(fileInputID="file_raa_ci_4_edit",re_ID)}
+}
+
+
+
+function letter_upload_common_function_4_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_4 = id;
+                    console.log("URL filesGlobal_file_raa_ci_4: ",filesGlobal_file_raa_ci_4);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_5_edit(fileInputID="file_raa_ci_5_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_5_edit(fileInputID="file_raa_ci_5_edit",re_ID)}
+}
+
+function letter_upload_common_function_5_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa_ci_5 = id;
+                    console.log("URL filesGlobal_file_raa_ci_5: ",filesGlobal_file_raa_ci_5);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_6_edit(fileInputID="file_pi_no_obj_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_6_edit(fileInputID="file_pi_no_obj_edit",re_ID)}
+}
+
+function letter_upload_common_function_6_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_pi_no_obj = id;
+                    console.log("URL filesGlobal_file_pi_no_obj: ",filesGlobal_file_pi_no_obj);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_7_edit(fileInputID="file_raa1_edit",re_ID)
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_7_edit(fileInputID="file_raa1_edit",re_ID)}
+}
+
+function letter_upload_common_function_7_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa1 = id;
+                    console.log("URL filesGlobal_file_raa1: ",filesGlobal_file_raa1);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_8_edit(fileInputID="file_raa2_edit",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_8_edit(fileInputID="file_raa2_edit",re_ID);}
+}
+
+function letter_upload_common_function_8_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa2 = id;
+                    console.log("URL filesGlobal_file_raa2: ",filesGlobal_file_raa2);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_9_edit(fileInputID="file_raa3_edit",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_9_edit(fileInputID="file_raa3_edit",re_ID);}
+}
+
+function letter_upload_common_function_9_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa3 = id;
+                    console.log("URL filesGlobal_file_raa3: ",filesGlobal_file_raa3);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_10_edit(fileInputID="file_raa4_edit",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_10_edit(fileInputID="file_raa4_edit",re_ID);}
+}
+
+function letter_upload_common_function_10_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa4 = id;
+                    console.log("URL filesGlobal_file_raa4: ",filesGlobal_file_raa4);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    letter_upload_common_function_11_edit(fileInputID="file_raa5_edit",re_ID);
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{letter_upload_common_function_11_edit(fileInputID="file_raa5_edit",re_ID);}
+}
+
+function letter_upload_common_function_11_edit(fileInputID,re_ID) {
+    console.log('Function common invoked to : ',fileInputID);
+    if(document.getElementById(fileInputID).value){
+        const f = document.getElementById(fileInputID);
+        [...f.files].forEach((file, i) => {
+            const fr = new FileReader();
+            fr.onload = (e) => {
+                const data = e.target.result.split(",");
+                const obj = {
+                    fileName: re_ID +'_'+fileInputID+'.pdf',
+                    mimeType: data[0].match(/:(\w.+);/)[1],
+                    data: data[1]
+                };
+                console.log('Function common invoked to readed : ',fileInputID);
+                google.script.run.withSuccessHandler((id) => {
+                    console.log("URL : ",id);
+                    filesGlobal_file_raa5 = id;
+                    console.log("URL filesGlobal_file_raa5: ",filesGlobal_file_raa5);
+                    // showSnackBar_progress('UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]')
+                    M.toast({html: 'UPLOADING DOCUMENTS ['+fileInputID+': SUCCESS]'})
+                    // saveTextData()
+                    // letter_upload_common_function_5(fileInputID="file_raa5",saveData);
+                    save_edit();
+                }).upload_and_save_to_folder(obj);
+            }
+            fr.readAsDataURL(file);
+        });
+    }else{save_edit();}
+}
+
+function backToResearchView(){
+
+  var researchID = document.getElementById("re_ID_edit").value;
+
+  console.log('researchID : ',researchID)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+
+          // closeModalMessage();
+          window.open(encoded_data.url+"?r="+encoded_data.encoded,'_top')
+      }).encodeBase64_researchID(researchID);
+
+}
+
+function backToAfterLoginPage(){
+
+  var sendDate = {}
+  sendDate.slmc_nu = document.getElementById("slmc_pi_view").value;
+
+  console.log('slmc_pi_view : ',sendDate.slmc_nu)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  // google.script.run.withSuccessHandler((encoded_data) => {
+
+  //         // closeModalMessage();
+  //         window.open(encoded_data.url+"?r="+encoded_data.encoded,'_top')
+  //     }).encodeBase64_researchID(slmc_pi_view);
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+                         window.open(encoded_data.url+"?a="+encoded_data.encoded,'_top')
+                        //  console.log(encoded_data.url+"?a="+encoded_data.encoded)
+                           }).encodeBase64_url(sendDate);
+
+}
+
+function backToAfterLoginPageFromMain(){
+
+  var sendDate = {}
+  sendDate.slmc_nu = document.getElementById("slmc_pi").value;
+
+  console.log('slmc_pi : ',sendDate.slmc_nu)
+
+  var modalMessage = document.getElementById("topictext");
+  modalMessage.innerHTML = "Loading Data.. please wait..";
+  openModalMessage();
+
+  // google.script.run.withSuccessHandler((encoded_data) => {
+
+  //         // closeModalMessage();
+  //         window.open(encoded_data.url+"?r="+encoded_data.encoded,'_top')
+  //     }).encodeBase64_researchID(slmc_pi_view);
+
+  google.script.run.withSuccessHandler((encoded_data) => {
+                         window.open(encoded_data.url+"?a="+encoded_data.encoded,'_top')
+                        //  console.log(encoded_data.url+"?a="+encoded_data.encoded)
+                           }).encodeBase64_url(sendDate);
+
+}
+
+
+
+
+$(document).ready(function() {
+
+    $('#pi_type_yes').change(function(event) {
+        $('#' + 'pi_yes').removeClass('none');
+    });
+
+    $('#pi_type_no').change(function(event) {
+        $('#' + 'pi_yes').addClass('none');
+    });
+
+
+    $('#pi_claim_type_no').change(function(event) {
+        $('#' + 'pi_claim_no').removeClass('none');
+    });
+
+    $('#pi_claim_type_yes').change(function(event) {
+        $('#' + 'pi_claim_no').addClass('none');
+    });
+
+
+    $('#pi_contact_type_yes').change(function(event) {
+        $('#' + 'pi_contact_no').removeClass('none');
+    });
+
+    $('#pi_contact_type_no').change(function(event) {
+        $('#' + 'pi_contact_no').addClass('none');
+    });
+
+});
+
+
+
+  
+
+</script>
