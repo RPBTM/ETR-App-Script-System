@@ -432,9 +432,9 @@ function retrieveResearchsForRID(rid="ResearchID1"){
     for (var i = 0; i < dataIndex.length; i++) {
       if(dataIndex[i][0]==rid){
         // dataRetrieved.push(dataIndex[i]);
-        if(ws.getRange('D'+(i+1).toString()).getValue()==rid){
+        if(ws.getRange('E'+(i+1).toString()).getValue()==rid){
 
-            dataRetrievedForRID.push(ws.getRange('A'+(i+1).toString()+":AA"+(i+1).toString()).getValues());
+            dataRetrievedForRID.push(ws.getRange('A'+(i+1).toString()+":AL"+(i+1).toString()).getValues());
             //  dataRetrieved.push(ws.getRange('D'+(i+1).toString()).getValue());
 
         }
@@ -515,7 +515,7 @@ function saveToSheet(saveData){
     
     for (var i = 0; i < dataIndex.length; i++) {
       if(dataIndex[i][0]==saveData.re_ID){
-        if(ws.getRange('D'+(i+1).toString()).getValue()==saveData.re_ID){
+        if(ws.getRange('E'+(i+1).toString()).getValue()==saveData.re_ID){
             saveStatusBack.status = 'Found';
             saveStatusBack.rowIndex = i;
         }
@@ -536,52 +536,106 @@ function saveToSheet(saveData){
       var today = new Date().toISOString().slice(0, 10)
       ws.getRange('B'+(lastRowIndex+1).toString()).setValue('1');
       
-      ws.getRange('D'+(lastRowIndex+1).toString()).setValue(saveData.re_ID);
-      ws.getRange('E'+(lastRowIndex+1).toString()).setValue(saveData.radio_pi_type);
-      ws.getRange('F'+(lastRowIndex+1).toString()).setValue(saveData.slmc_pi);
-      ws.getRange('G'+(lastRowIndex+1).toString()).setValue(saveData.co_1);
-      ws.getRange('H'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_1);
-      ws.getRange('I'+(lastRowIndex+1).toString()).setValue(saveData.co_2);
-      ws.getRange('J'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_2);
-      ws.getRange('K'+(lastRowIndex+1).toString()).setValue(saveData.co_3);
-      ws.getRange('L'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_3);
-      ws.getRange('M'+(lastRowIndex+1).toString()).setValue(saveData.co_4);
-      ws.getRange('N'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_4);
-      ws.getRange('O'+(lastRowIndex+1).toString()).setValue(saveData.ra_type);
-      ws.getRange('P'+(lastRowIndex+1).toString()).setValue(saveData.ra_sub_type);
-      ws.getRange('Q'+(lastRowIndex+1).toString()).setValue(saveData.r_topic);
-      ws.getRange('R'+(lastRowIndex+1).toString()).setValue(saveData.file_raa1);
-      ws.getRange('S'+(lastRowIndex+1).toString()).setValue(saveData.file_raa2);
-      ws.getRange('T'+(lastRowIndex+1).toString()).setValue(saveData.file_raa3);
-      ws.getRange('U'+(lastRowIndex+1).toString()).setValue(saveData.file_raa4);
-      ws.getRange('V'+(lastRowIndex+1).toString()).setValue(saveData.file_raa5);
-      ws.getRange('Z'+(lastRowIndex+1).toString()).setValue(date);
-      ws.getRange('AA'+(lastRowIndex+1).toString()).setValue(today);
+      ws.getRange('E'+(lastRowIndex+1).toString()).setValue(saveData.re_ID);
+      ws.getRange('F'+(lastRowIndex+1).toString()).setValue(saveData.radio_pi_type);
+      ws.getRange('G'+(lastRowIndex+1).toString()).setValue(saveData.slmc_pi);
+      ws.getRange('H'+(lastRowIndex+1).toString()).setValue(saveData.nic_pi);
+      ws.getRange('I'+(lastRowIndex+1).toString()).setValue(saveData.name_pi);
+      ws.getRange('J'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_1);
+      ws.getRange('K'+(lastRowIndex+1).toString()).setValue(saveData.radio_pi_claim_type);
+      ws.getRange('L'+(lastRowIndex+1).toString()).setValue(saveData.file_pi_no_obj);
+      ws.getRange('M'+(lastRowIndex+1).toString()).setValue(saveData.radio_pi_contact_type);
+      ws.getRange('N'+(lastRowIndex+1).toString()).setValue(saveData.pi_contact_nominated);
+
+      ws.getRange('O'+(lastRowIndex+1).toString()).setValue(saveData.co_1);
+      ws.getRange('P'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_1);
+      ws.getRange('Q'+(lastRowIndex+1).toString()).setValue(saveData.co_2);
+      ws.getRange('R'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_2);
+      ws.getRange('S'+(lastRowIndex+1).toString()).setValue(saveData.co_3);
+      ws.getRange('T'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_3);
+      ws.getRange('U'+(lastRowIndex+1).toString()).setValue(saveData.co_4);
+      ws.getRange('V'+(lastRowIndex+1).toString()).setValue(saveData.file_raa_ci_4);
+      ws.getRange('W'+(lastRowIndex+1).toString()).setValue(saveData.ra_type);
+      ws.getRange('X'+(lastRowIndex+1).toString()).setValue(saveData.ra_sub_type);
+      ws.getRange('Y'+(lastRowIndex+1).toString()).setValue(saveData.r_topic);
+      ws.getRange('Z'+(lastRowIndex+1).toString()).setValue(saveData.file_raa1);
+      ws.getRange('AA'+(lastRowIndex+1).toString()).setValue(saveData.file_raa2);
+      ws.getRange('AB'+(lastRowIndex+1).toString()).setValue(saveData.file_raa3);
+      ws.getRange('AC'+(lastRowIndex+1).toString()).setValue(saveData.file_raa4);
+      ws.getRange('AD'+(lastRowIndex+1).toString()).setValue(saveData.file_raa5);
+
+      ws.getRange('AF'+(lastRowIndex+1).toString()).setValue(saveData.radio_gov_fund);
+      ws.getRange('AG'+(lastRowIndex+1).toString()).setValue(saveData.radio_unfinished_ra);
+      ws.getRange('AH'+(lastRowIndex+1).toString()).setValue(saveData.radio_radioAgree);
+
+      
+      ws.getRange('AI'+(lastRowIndex+1).toString()).setValue(date);
+      ws.getRange('AK'+(lastRowIndex+1).toString()).setValue(today);
    
 
     }
 
     if(saveStatusBack.status == 'Found'){
 
-    var date = Utilities.formatDate(new Date(), 'GMT+5:30', 'MMMM dd, yyyy HH:mm:ss Z')
-    var today = new Date().toISOString().slice(0, 10)
+    // var date = Utilities.formatDate(new Date(), 'GMT+5:30', 'MMMM dd, yyyy HH:mm:ss Z')
+    // var today = new Date().toISOString().slice(0, 10)
 
 
+    //   ws.getRange('B'+(saveStatusBack.rowIndex+1).toString()).setValue('1');
+      
+    //   ws.getRange('D'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);
+    //   ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);
+    //   ws.getRange('F'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.slmc_pi);
+    //   ws.getRange('G'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_1);
+    //   ws.getRange('H'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_2);
+    //   ws.getRange('I'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_3);
+    //   ws.getRange('J'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_4);
+    //   ws.getRange('K'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_type);
+    //   ws.getRange('L'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_sub_type);
+    //   ws.getRange('M'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.r_topic);
+    //   ws.getRange('N'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa);
+    //   ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
+    //   ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
+
+      var date = Utilities.formatDate(new Date(), 'GMT+5:30', 'MMMM dd, yyyy HH:mm:ss Z')
+      var today = new Date().toISOString().slice(0, 10)
       ws.getRange('B'+(saveStatusBack.rowIndex+1).toString()).setValue('1');
       
-      ws.getRange('D'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);
-      ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);
-      ws.getRange('F'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.slmc_pi);
-      ws.getRange('G'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_1);
-      ws.getRange('H'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_2);
-      ws.getRange('I'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_3);
-      ws.getRange('J'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_4);
-      ws.getRange('K'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_type);
-      ws.getRange('L'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_sub_type);
-      ws.getRange('M'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.r_topic);
-      ws.getRange('N'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa);
-      ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
-      ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
+      ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);
+      ws.getRange('F'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);
+      ws.getRange('G'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.slmc_pi);
+      ws.getRange('H'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.nic_pi);
+      ws.getRange('I'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.name_pi);
+      ws.getRange('J'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_1);
+      ws.getRange('K'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_claim_type);
+      ws.getRange('L'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_pi_no_obj);
+      ws.getRange('M'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_contact_type);
+      ws.getRange('N'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.pi_contact_nominated);
+
+      ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_1);
+      ws.getRange('P'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_1);
+      ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_2);
+      ws.getRange('R'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_2);
+      ws.getRange('S'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_3);
+      ws.getRange('T'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_3);
+      ws.getRange('U'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_4);
+      ws.getRange('V'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_4);
+      ws.getRange('W'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_type);
+      ws.getRange('X'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_sub_type);
+      ws.getRange('Y'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.r_topic);
+      ws.getRange('Z'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa1);
+      ws.getRange('AA'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa2);
+      ws.getRange('AB'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa3);
+      ws.getRange('AC'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa4);
+      ws.getRange('AD'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa5);
+
+      ws.getRange('AF'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_gov_fund);
+      ws.getRange('AG'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_unfinished_ra);
+      ws.getRange('AH'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_radioAgree);
+
+      
+      ws.getRange('AI'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
+      ws.getRange('AK'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
    
 
     }
@@ -620,9 +674,11 @@ function saveToSheet_edit(saveData){
     
     for (var i = 0; i < dataIndex.length; i++) {
       if(dataIndex[i][0]==saveData.re_ID){
-        if(ws.getRange('D'+(i+1).toString()).getValue()==saveData.re_ID){
+        if(ws.getRange('E'+(i+1).toString()).getValue()==saveData.re_ID){
             saveStatusBack.status = 'Found';
             saveStatusBack.rowIndex = i;
+            if(ws.getRange('B'+(i+1).toString()).getValue()!='0'){saveStatusBack.status = 'Error 101';};
+            saveStatusBack.statusColumValue = ws.getRange('B'+(i+1).toString()).getValue();
         }
       }
     }
@@ -666,13 +722,13 @@ function saveToSheet_edit(saveData){
 
   //   }
 
-    if(saveStatusBack.status == 'Found'){
+    if(saveStatusBack.status == 'Found' && saveStatusBack.statusColumValue=='0'){
 
     var date = Utilities.formatDate(new Date(), 'GMT+5:30', 'MMMM dd, yyyy HH:mm:ss Z')
     var today = new Date().toISOString().slice(0, 10)
 
 
-      ws.getRange('B'+(saveStatusBack.rowIndex+1).toString()).setValue('5');
+      ws.getRange('B'+(saveStatusBack.rowIndex+1).toString()).setValue('1');
       
       // ws.getRange('D'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);
       // ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);
@@ -688,27 +744,47 @@ function saveToSheet_edit(saveData){
       // ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
       // ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
 
-      if(saveData.re_ID!=""){ws.getRange('D'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);}
-      if(saveData.radio_pi_type!=""){ ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);}
-      if(saveData.slmc_pi!=""){ws.getRange('F'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.slmc_pi);}
-      if(saveData.co_1!=""){ws.getRange('G'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_1);}
-      if(saveData.file_raa_ci_1!=""){ws.getRange('H'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_1);}
-      if(saveData.co_2!=""){ws.getRange('I'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_2);}
-      if(saveData.file_raa_ci_2!=""){ws.getRange('J'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_2);}
-      if(saveData.co_3!=""){ws.getRange('K'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_3);}
-      if(saveData.file_raa_ci_3!=""){ws.getRange('L'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_3);}
-      if(saveData.co_4!=""){ws.getRange('M'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_4);}
-      if(saveData.file_raa_ci_4!=""){ws.getRange('N'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_4);}
-      if(saveData.ra_type!=""){ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_type);}
-      if(saveData.ra_sub_type!=""){ws.getRange('P'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_sub_type);}
-      if(saveData.r_topic!=""){ ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.r_topic);}
-      if(saveData.file_raa1!=""){ws.getRange('R'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa1);}
-      if(saveData.file_raa2!=""){ws.getRange('S'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa2);}
-      if(saveData.file_raa3!=""){ws.getRange('T'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa3);}
-      if(saveData.file_raa4!=""){ws.getRange('U'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa4);}
-      if(saveData.file_raa5!=""){ws.getRange('V'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa5);}
-      ws.getRange('Z'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
-      ws.getRange('AA'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
+      if(saveData.re_ID!=""){ws.getRange('E'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.re_ID);}
+      if(saveData.radio_pi_type!=""){ ws.getRange('F'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_type);}
+      if(saveData.slmc_pi!=""){ws.getRange('G'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.slmc_pi);}
+      if(saveData.nic_pi!=""){ws.getRange('H'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.nic_pi);}
+      if(saveData.name_pi!=""){ws.getRange('I'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.name_pi);}
+
+      if(saveData.file_raa_pi!=""){ws.getRange('J'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_pi);}
+
+      if(saveData.radio_pi_claim_type!=""){ws.getRange('K'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_claim_type);}
+      if(saveData.file_pi_no_obj!=""){ws.getRange('L'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_pi_no_obj);}
+      if(saveData.radio_pi_contact_type!=""){ws.getRange('M'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_pi_contact_type);}
+      if(saveData.pi_contact_nominated!=""){ws.getRange('N'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.pi_contact_nominated);}
+
+
+
+      if(saveData.co_1!=""){ws.getRange('O'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_1);}
+      if(saveData.file_raa_ci_1!=""){ws.getRange('P'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_1);}
+      if(saveData.co_2!=""){ws.getRange('Q'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_2);}
+      if(saveData.file_raa_ci_2!=""){ws.getRange('R'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_2);}
+      if(saveData.co_3!=""){ws.getRange('S'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_3);}
+      if(saveData.file_raa_ci_3!=""){ws.getRange('T'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_3);}
+      if(saveData.co_4!=""){ws.getRange('U'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.co_4);}
+      if(saveData.file_raa_ci_4!=""){ws.getRange('V'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa_ci_4);}
+
+
+      if(saveData.ra_type!=""){ws.getRange('W'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_type);}
+      if(saveData.ra_sub_type!=""){ws.getRange('X'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.ra_sub_type);}
+      if(saveData.r_topic!=""){ ws.getRange('Y'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.r_topic);}
+
+      if(saveData.file_raa1!=""){ws.getRange('Z'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa1);}
+      if(saveData.file_raa2!=""){ws.getRange('AA'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa2);}
+      if(saveData.file_raa3!=""){ws.getRange('AB'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa3);}
+      if(saveData.file_raa4!=""){ws.getRange('AC'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa4);}
+      if(saveData.file_raa5!=""){ws.getRange('AD'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.file_raa5);}
+
+      if(saveData.radio_gov_fund!=""){ws.getRange('AF'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_gov_fund);}
+      if(saveData.radio_unfinished_ra!=""){ws.getRange('AG'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_unfinished_ra);}
+      if(saveData.radio_radioAgree!=""){ws.getRange('AH'+(saveStatusBack.rowIndex+1).toString()).setValue(saveData.radio_radioAgree);}
+
+      ws.getRange('AI'+(saveStatusBack.rowIndex+1).toString()).setValue(date);
+      ws.getRange('AK'+(saveStatusBack.rowIndex+1).toString()).setValue(today);
    
 
     }
