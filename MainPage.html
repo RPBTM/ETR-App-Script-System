@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            
+	<?!= include('JavaScript.html'); ?>
+  <?!= include("StyleSheetMain.html"); ?>
+
+  <script>
+    window.onload = function() {
+
+    console.log("Hello world!");
+    runFirstMainPage();
+
+    // google.script.run 
+    //     .withSuccessHandler(function(vA) {
+    //         updateSelect(vA);
+    //     })
+    //     .getSelectOptions();
+
+}
+  </script>
+
+  </head>
+  <body>
+
+    <div class="container">
+        <!-- Page Content goes here -->
+     
+    <form class="col s12">
+
+
+      <div class="row">
+        <div class="input-field col s12">
+         <!-- <center> <h5> Education Training & Research Unit...</h5> </center> 
+        <center> <h6> Online Research Allowance form</h6> </center>  -->
+        <center> <h5  style="font-family:'Garamond'" > Online Research Allowance system</h5> </center> 
+        <center> <h5  style="font-family:'Aileron'" > Education Training & Research Unit</h5> </center> 
+        <center> <h6  style="font-family:'Aileron'" > Ministry of Health, Sri Lanka</h6> </center> 
+         <!-- <center> <a class="btn-flat"  >Online Research Allowance system</a> </center> -->
+         <center> <a class="btn-flat"  >ADD NEW RESEARCH</a> </center> 
+        </div>
+      </div>
+
+      
+      <div class="row">
+       <h6>
+       1.1.  Are you the principal investigator of this research? 
+      </h6> 
+        <p>
+      <label>
+        <input name="pi_type" type="radio" id="pi_type_yes" data-id="pi_no" value="pi_yes"/>
+        <span>Yes</span>
+      <label>
+        <input name="pi_type" type="radio" id="pi_type_no" data-id="pi_yes" value="pi_no"/>
+        <span>No</span>
+      </label>
+        </p>
+      </div>
+
+    <div id="pi_yes" class="none">
+
+      <div class="row">
+        <div class="input-field col s3">
+          <input  id="re_ID" type="text" class="validate" readonly>
+          <label for="re_ID">1.1. Research ID : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input  id="nic_pi" type="text" class="validate" readonly>
+          <label for="nic_pi">1.2. Principal Investigator NIC : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input  id="slmc_pi" type="text" class="validate" readonly>
+          <label for="slmc_pi">1.3.Principal Investigator SLMC : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input  id="name_pi" type="text" class="validate" readonly>
+          <label for="name_pi">1.4.Principal Investigator  Name : </label>
+        </div>
+
+      </div>
+
+
+        <div class="row">
+
+        <div class="input-field col s3">
+          <input list="investigator_list" name="browser" id="co_1" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="co_1">3.2. Co Investigator 1 : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input list="investigator_list" name="browser" id="co_2" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="co_2">3.3. Co Investigator 2 : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input list="investigator_list" name="browser" id="co_3" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="co_3">3.4. Co Investigator 3 : </label>
+        </div>
+
+        <div class="input-field col s3">
+          <input list="investigator_list" name="browser" id="co_4" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="co_4">3.5. Co Investigator 4 : </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s3">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File CI-1: </span>
+            <input type="file"  id="file_raa_ci_1" name="file_raa_ci_1" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="3.6. Co Investigator 1 File">
+          </div>
+          </div>
+      </div>
+      <!-- </div> -->
+
+      <!-- <div class="row"> -->
+        <div class="input-field col s3">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File CI-2 : </span>
+            <input type="file"  id="file_raa_ci_2" name="file_raa_ci_2" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="3.7. Co Investigator 2 Fil">
+          </div>
+          </div>
+      </div>
+      <!-- </div>
+
+      <div class="row"> -->
+        <div class="input-field col s3">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File CI-3: </span>
+            <input type="file" id="file_raa_ci_3" name="file_raa_ci_3" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="3.8. Co Investigator 3 File">
+          </div>
+          </div>
+      </div>
+
+      <div class="input-field col s3">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File CI-4: </span>
+            <input type="file" id="file_raa_ci_4" name="file_raa_ci_4" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="3.9. Co Investigator 4 File">
+          </div>
+          </div>
+      </div>
+      </div>
+
+      <!-- <div class="divider"></div> -->
+
+      <div class="row">
+
+        <div class="input-field col s6">
+          <input list="investigator_list" name="browser" id="ra_type" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="ra_type">4.1. Research application type : </label>
+        </div>
+
+         <div class="input-field col s6">
+          <input list="investigator_list" name="browser" id="ra_sub_type" type="text" class="validate">
+           <datalist id="investigator_list"  class="validate" >
+            <option value="Edge">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+          <label for="ra_sub_type">4.2. Research sub type : </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input  id="r_topic" type="text" class="validate">
+          <label for="r_topic">4.3. Research Topic : </label>
+        </div>
+       </div>
+
+      <div class="row">
+        <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 1 </span>
+            <input type="file"  id="file_raa1" name="file_raa1" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+      </div>
+      <!-- </div> -->
+
+      <!-- <div class="row"> -->
+        <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 2 </span>
+            <input type="file"  id="file_raa2" name="file_raa2" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+      </div>
+      <!-- </div>
+
+      <div class="row"> -->
+        <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 3 </span>
+            <input type="file" multiple id="file_raa3" name="file_raa3" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+      </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 4 </span>
+            <input type="file" multiple id="file_raa4" name="file_raa4" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+      </div>
+      <!-- </div>
+
+      <div class="row"> -->
+        <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 5 </span>
+            <input type="file" multiple id="file_raa5" name="file_raa5" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+      </div>
+
+       <!-- <div class="input-field col s4">
+          <div class="file-field input-field">
+          <div class="btn">
+            <span>File 6 </span>
+            <input type="file" multiple id="file_raa6" name="file_raa6" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Upload Research Allowance Application">
+          </div>
+          </div>
+       </div> -->
+
+      </div>
+
+      <div class="row">
+       <h6>
+       4.4.  Have you used Government funding for this research? 
+      </h6> 
+        <p>
+      <label>
+        <input name="gov_fund" type="radio" id="gov_fund_yes" data-id="gov_fund_no" value="gov_fund_yes"/>
+        <span>Yes</span>
+      <label>
+        <input name="gov_fund" type="radio" id="gov_fund_no" data-id="gov_fund_yes" value="gov_fund_no"/>
+        <span>No</span>
+      </label>
+        </p>
+      </div>
+
+
+      <div class="row">
+       <h6>
+       4.5.  Do you or any of your Co-Inverstigators have unfinished research allowance submittion/s? 
+      </h6> 
+        <p>
+      <label>
+        <input name="unfinished_ra" type="radio" id="unfinished_ra_yes" data-id="unfinished_ra_no" value="unfinished_ra_yes"/>
+        <span>Yes</span>
+      <label>
+        <input name="unfinished_ra" type="radio" id="unfinished_ra_no" data-id="unfinished_ra_yes" value="unfinished_ra_no"/>
+        <span>No</span>
+      </label>
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input  id="r_status" type="text" class="validate" readonly>
+          <label for="r_status">4.6. Research Status : </label>
+        </div>
+       </div>
+
+     
+
+      <div id="progress_indeter" class="none">
+      <div class="progress">
+      <div class="indeterminate"></div>
+      </div>
+      </div>
+
+
+      <div class="row">
+        <div class="input-field col s6">
+          <center><a class="waves-effect waves-light btn" onclick="upload()">Submit Application</a></center>
+        </div>
+
+        <div class="input-field col s6">
+          <center><a class="waves-effect waves-light btn" onclick="backToAfterLoginPageFromMain()" >Back to previous page</a></center>
+        </div>
+      </div>
+
+       </div>
+
+       </div>
+
+       <center> <p style="color:#808080" > &copy; Copyright 2021 Government Medical Officers' Association</p> </center> 
+
+
+    </form>
+
+
+
+    <div id="modalMessage" class="modal">
+      <div class="modal-content">
+        <h5 id="topictext">Login in...</h5>
+        <a style="color:red" id="loaderTextLink_resetPass" href="#" target="_blank"></a>
+      </div>
+
+    </div>
+
+
+
+
+  </div>
+
+  </body>
+</html>
+
