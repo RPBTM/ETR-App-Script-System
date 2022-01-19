@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            
+	<?!= include('JavaScript.html'); ?>
+  <?!= include("StyleSheet.html"); ?>
+
+  <script>
+    window.onload = function() {
+
+    console.log("Hello world!");
+    runFirst_DecodeVal();
+
+}
+  </script>
+
+  </head>
+  <body>
+
+    <div class="container">
+        <!-- Page Content goes here -->
+     
+    <form class="col s6">
+
+      <div class="row">
+        <div class="input-field col s12">
+        <center> <h5  style="font-family:'Garamond'" > Online Research Allowance system</h5> </center> 
+        <center> <h5  style="font-family:'Aileron'" > Education Training & Research Unit</h5> </center> 
+        <center> <h6  style="font-family:'Aileron'" > Ministry of Health, Sri Lanka</h6> </center> 
+        <!-- <center> <h6> Online Research Allowance system</h6> </center>  -->
+        </div>
+      </div>
+
+      <!-- <div class="row"> -->
+        <div class="input-field col s12">
+         <!-- <center> <h5> Login successful..</h5> </center>  -->
+         <center> <a class="btn-flat"  >Logged in..</a> </center> 
+        </div>
+      <!-- </div> -->
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input  id="slmc_nu" type="text" class="validate" readonly>
+          <label for="slmc_nu">Your SLMC : </label>
+        </div>
+      </div>
+
+        <div class="row">
+        <div class="input-field col s12">
+          <input list="research_list" name="browser" id="re_list" type="text" class="validate">
+           <datalist id="research_list"  class="validate" >
+        </datalist>
+          <label for="re_list">1.1. Select a research : </label>
+        </div>
+      </div>
+
+      <div id="progress_indeter" class="none">
+      <div class="progress">
+      <div class="indeterminate"></div>
+      </div>
+      </div>
+
+
+      <div class="row">
+        <div class="input-field col s12">
+          <center><a class="waves-effect waves-light btn" onclick="viewYourResearches()">View Your Researches</a></center>
+        </div>
+      <!-- </div>
+
+      <div class="row"> -->
+        <div class="input-field col s12">
+         <center><a class="waves-effect waves-teal btn-flat" onclick="addNew()">Add New Research</a></center>
+       </div>
+       </div>
+
+       <center> <p style="color:#808080"  > &copy; Copyright 2021 Government Medical Officers' Association</p> </center> 
+
+    </form>
+
+
+
+    <div id="modalMessage" class="modal">
+      <div id="progress_indeter" class="none">
+      <div class="progress">
+      <div class="indeterminate"></div>
+      </div>
+      </div>
+      <div class="modal-content">
+        <h5 id="topictext">Login in...</h5>
+        <a style="color:red" id="loaderTextLink_resetPass" href="#" target="_blank"></a>
+      </div>
+
+    </div>
+
+
+
+
+  </div>
+
+  </body>
+</html>
